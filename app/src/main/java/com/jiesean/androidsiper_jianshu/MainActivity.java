@@ -41,22 +41,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-//        Looper.prepare();
-        mHandler = new Handler() {
-            @Override
-            public void handleMessage(Message msg) {
-                if (msg.what == 0x123) {
-                    System.out.println("收到消息");
-                    setChartConf();
-                }
-            }
-        };
 
         articleList = new ArrayList<>();
         author = new Author();
 
-        mLineChart = (LineChart) findViewById(R.id.line_chart);
-        setChartConf();
 
         new Thread() {
             @Override
@@ -114,61 +102,16 @@ public class MainActivity extends AppCompatActivity {
                     }
 
                     System.out.println("总共获得文章篇数 ：" + articleList.size());
-                    //1.创建Message对象
-                    Message sendMsg = new Message();
-                    //在Message的what字段中携带少量信息，用于消息的身份识别
-                    sendMsg.what = 0x123;
-                    //使用接收线程创建的Handler对象的sendMessage函数向接收线程发送消息
-                    mHandler.sendMessage(sendMsg);
-
-
-
                 }
                 catch(Exception e){
-
                     e.printStackTrace();
                     System.out.println("Exception");
-
-
                 }
             }
         }.start();
 
-
     }
 
-    private void setChartConf(){
-
-        ArrayList<String> xVals = new ArrayList<String>();
-        for (int i = 0; i < author.getArticleNum(); i++) {
-            xVals.add(i + 1 + "");
-        }
-
-        ArrayList<Entry> yVals = new ArrayList<Entry>();
-
-        for (int i = 0; i < author.getArticleNum(); i++) {
-            yVals.add(new Entry(articleList.get(i).getReadNum(), i));
-        }
-
-        // create a dataset and give it a type
-        LineDataSet set1 = new LineDataSet(yVals, "");
-
-        set1.setDrawCubic(false);  //设置曲线为圆滑的线
-        set1.setCubicIntensity(0.2f);
-        set1.setDrawFilled(false);  //设置包括的范围区域填充颜色
-        set1.setDrawCircles(true);  //设置有圆点
-        set1.setLineWidth(2f);    //设置线的宽度
-        set1.setCircleSize(5f);   //设置小圆的大小
-        set1.setHighLightColor(Color.rgb(244, 117, 117));
-        set1.setColor(Color.rgb(244, 117, 117));    //设置曲线的颜色
-
-        // create a data object with the datasets
-        LineData data = new LineData(xVals, set1);
-
-        // set data
-        mLineChart.setData(data);
-        mLineChart.invalidate();
-    }
 
 
 }
